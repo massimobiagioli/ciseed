@@ -36,16 +36,32 @@ class API_Controller extends CI_Controller {
         
         // Effettua caricamento da model
         $this->loadModel();
-        $data = $this->fetchModelRecord($id);
-        if (!$data) {
+        $row = $this->fetchModelRecord($id);
+        if (!$row) {
             $this->handleInternalError();
             die();
         }
         
-        $this->postLoad($id);
+        $this->postLoad($row);
         
         // Gestione risposta json
-        $this->handleJsonResponse($data);
+        $this->handleJsonResponse($row);
+    }
+    
+    /**
+     * Effettua operazioni pre-caricamento record
+     * (Personalizzare nelle sottoclassi)
+     * @param int $id ID del record da caricare
+     */
+    protected function preLoad($id) {
+    }
+
+    /**
+     * Effettua operazioni post-caricamento record
+     * (Personalizzare nelle sottoclassi)
+     * @param array $row Record caricato
+     */
+    protected function postLoad($row) {        
     }
     
     /**
@@ -56,13 +72,7 @@ class API_Controller extends CI_Controller {
     protected function fetchModelRecord($id) {
         $modelName = $this->model;
         return $this->$modelName->load($id);
-    }
-    
-    protected function preLoad($id) {
-    }
-    
-    protected function postLoad($id) {        
-    }
+    }        
     
     /**
      * Caricamento dati
@@ -92,92 +102,210 @@ class API_Controller extends CI_Controller {
             die();
         }
                 
-        $this->postQuery($queryData);
+        $this->postQuery($queryData, $data);
         
         // Gestione risposta json
         $this->handleJsonResponse($data);
     }
+
+    /**
+     * Effettua operazioni pre-caricamento dati
+     * (Personalizzare nelle sottoclassi)
+     * @param object $queryData QueryData
+     */    
+    protected function preQuery($queryData) {        
+    }
+
+    /**
+     * Effettua operazioni post-caricamento dati
+     * (Personalizzare nelle sottoclassi)
+     * @param object $queryData QueryData
+     * @param array $data Dati caricati dal model
+     */        
+    protected function postQuery($queryData, $data) {        
+    }
     
+    /**
+     * Carica dati dal model, in funzione del QueryData
+     * @param int $queryData QueryData
+     * @return Dati reperiti dal model in caso di esito potitivo, altrimenti false
+     */
     protected function fetchModelQuery($queryData) {
         $modelName = $this->model;
         return $this->$modelName->query($queryData);
     }
-    
-    private function parseQueryFilters($filters) {
-        return json_decode(base64_decode(urldecode($filters)));
-    }
-    
-    protected function preQuery($queryData) {        
-    }
-    
-    protected function postQuery($queryData) {        
-    }
-    
+        
+    /**
+     * Inserimento di un nuovo elemento
+     */
     public function insert() {
+        // Controllo autorizzazioni
         if (!$this->checkAuth()) {
             $this->handleUnhautorized();
             die();
         }
         
-        $toInsert = $this->parseInsertData();
+        // Effettua il parsing dei dati in ingresso
+        $toInsert = $this->parseInputData();
+        
         $this->preInsert($toInsert);
         
-        $this->postInsert($toInsert);
+        // Effettua salvataggio dei dati
+        $this->loadModel();
+        $inserted = $this->insertModel($toInsert);
+        if (!$inserted) {
+            $this->handleInternalError();
+            die();
+        }
+        
+        $this->postInsert($inserted);
+        
+        // Gestione risposta json
+        $this->handleJsonResponse($inserted);
     }
-    
-    private function parseInsertData() {
-        // TODO ...
-    }
-    
+
+    /**
+     * Effettua operazioni pre-inserimento record
+     * (Personalizzare nelle sottoclassi)
+     * @param array $toInsert Elemento da inserire
+     */        
     protected function preInsert($toInsert) {    
     }
-    
-    protected function postInsert($toInsert) {        
+
+    /**
+     * Effettua operazioni post-inserimento record
+     * (Personalizzare nelle sottoclassi)
+     * @param array $inserted Elemento inserito
+     */        
+    protected function postInsert($inserted) {        
     }
     
+    /**
+     * Effettua inserimento di un nuovo elemento
+     * @param object $toInsert Dati da inserire
+     * @return mixed Nuovo elemento inserito se esito positivo, altrimenti false
+     */
+    protected function insertModel($toInsert) {
+        $modelName = $this->model;
+        return $this->$modelName->insert($toInsert);
+    }
+    
+    /**
+     * Aggiornamento di un elemento esistente
+     * @param int $id ID dell'elemento da aggiornare
+     */
     public function update($id) {
+        // Controllo autorizzazioni
         if (!$this->checkAuth()) {
             $this->handleUnhautorized();
             die();
         }
         
-        $toUpdate = $this->parseUpdateData();
-        $old = null;
-        $this->preUpdate($toUpdate, $old);
+        // Effettua il parsing dei dati in ingresso
+        $toUpdate = $this->parseInputData();
         
-        $this->postUpdate($toUpdate, $old);        
-    }
-
-    private function parseUpdateData() {
-        // TODO ...        
-    }
-    
-    protected function preUpdate($toUpdate) {
+        $this->preUpdate($id, $toUpdate);
         
-    }
-    
-    protected function postUpdate($toUpdate) {        
-    }
-
-    public function delete($id) {
-        if (!$this->checkAuth()) {
-            $this->handleUnhautorized();
+        // Effettua salvataggio dei dati
+        $this->loadModel();
+        $updated = $this->updateModel($id, $toUpdate);
+        if (!$updated) {
+            $this->handleInternalError();
             die();
         }
         
-        $toDelete = null;
-        $this->preDelete($toDelete);
+        $this->postUpdate($updated);
         
-        $this->postDelete($toDelete);
-    }
-    
-    protected function preDelete($toDelete) {        
-    }
-    
-    protected function postDelete($toDelete) {        
+        // Gestione risposta json
+        $this->handleJsonResponse($updated);
     }    
     
-    private function checkAuth() {
+    /**
+     * Effettua operazioni pre-aggiornamento record
+     * (Personalizzare nelle sottoclassi)
+     * @param int $id ID dell'elemento da aggornare
+     * @param array $toUpdate Elemento da aggiornare
+     */      
+    protected function preUpdate($id, $toUpdate) {        
+    }
+
+    /**
+     * Effettua operazioni post-aggiornamento record
+     * (Personalizzare nelle sottoclassi)
+     * @param array $updated Elemento aggiornato
+     */      
+    protected function postUpdate($updated) {        
+    }
+    
+    /**
+     * Effettua aggiornamento di un record esistente
+     * @param object $toUpdate Dati da aggiornare
+     * @return mixed Elemento aggiornato se esito positivo, altrimenti false
+     */
+    protected function updateModel($id, $toUpdate) {
+        $modelName = $this->model;
+        return $this->$modelName->update($id, $toUpdate);
+    }
+    
+    /**
+     * Effettua cancellazione di un elemento
+     * @param int $id ID dell'elemento da cancellare
+     */
+    public function delete($id) {
+        // Controllo autorizzazioni
+        if (!$this->checkAuth()) {
+            $this->handleUnhautorized();
+            die();
+        }
+                
+        $this->preDelete($id);
+        
+        // Effettua cancellazione dei dati
+        $this->loadModel();
+        $deleted = $this->deleteModel($id);
+        if (!$deleted) {
+            $this->handleInternalError();
+            die();
+        }
+        
+        $this->postDelete($deleted);
+        
+        // Gestione risposta json
+        $this->handleJsonResponse($deleted);
+    }
+    
+    /**
+     * Effettua operazioni pre-cancellazione record
+     * (Personalizzare nelle sottoclassi)
+     * @param int $id ID dell'elemento da cancellare
+     */      
+    protected function preDelete($id) {        
+    }
+
+    /**
+     * Effettua operazioni post-cancellazione record
+     * (Personalizzare nelle sottoclassi)
+     * @param array $deleted Elemento cancellato
+     */      
+    protected function postDelete($deleted) {        
+    }    
+    
+    /**
+     * Effettua canvellazione di un record esistente
+     * @param int $id ID elemento da cancellare
+     * @return mixed Elemento cancellato se esito positivo, altrimenti false
+     */
+    protected function deleteModel($id) {
+        $modelName = $this->model;
+        return $this->$modelName->delete($id);
+    }
+    
+    /**
+     * Effettua controllo autenticazione
+     * (Il metodo standard effettua il controllo su "X-AUTH" presente nell'header della request)
+     * @return boolean true se autenticato, altrimenti false
+     */
+    protected function checkAuth() {
         //$authKey = $this->input->request_headers()['X-AUTH'];
         
         // TODO ....
@@ -185,12 +313,27 @@ class API_Controller extends CI_Controller {
         return true;
     }
     
-    protected function loadModel() {
+    /**
+     * Effettua il caricamento dei model necessari alla manipolazione dei dati
+     */
+    private function loadModel() {
         $this->load->model($this->model . '_model', $this->model, TRUE);
         $this->loadCustomModels();
     }
     
+    /**
+     * Effettua il caricamento di model personalizzati
+     * (Personalizzare nelle sottoclassi)
+     */
     protected function loadCustomModels() {        
+    }
+    
+    private function parseQueryFilters($filters) {
+        return json_decode(base64_decode(urldecode($filters)));
+    }
+
+    private function parseInputData() {
+        return json_decode(file_get_contents("php://input"));
     }
 
     private function handleJsonResponse($data) {
