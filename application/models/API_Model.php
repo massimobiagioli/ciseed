@@ -27,10 +27,13 @@ class API_Model extends CI_Model {
      * @return mixed Record identificato dalla chiave se trovato, altrimenti false
      */
     public function load($id) {
-        try {
+        try {       
+            //$error = 'Always throw this error';
+            //throw new Exception($error);
             $query = $this->db->get_where($this->tableName, array($this->pk => $id));                
             return $query->row();
-        } catch (Exception $ex) {
+        } catch (Exception $ex) {            
+            log_message('error', $ex->getMessage());
             return false;
         }
     }    
@@ -57,6 +60,7 @@ class API_Model extends CI_Model {
             
             return $query->result();
         } catch (Exception $ex) {
+            log_message('error', $ex->getMessage());
             return false;
         }
     }            
@@ -72,6 +76,7 @@ class API_Model extends CI_Model {
             $id = $this->db->insert_id();            
             return $this->updateDataWithID($data, $id);
         } catch (Exception $ex) {
+            log_message('error', $ex->getMessage());
             return false;
         }
     }
@@ -88,6 +93,7 @@ class API_Model extends CI_Model {
             $this->db->update($this->tableName, $data);
             return $this->updateDataWithID($data, $id);
         } catch (Exception $ex) {
+            log_message('error', $ex->getMessage());
             return false;
         }
     }
@@ -103,6 +109,7 @@ class API_Model extends CI_Model {
             $this->db->delete($this->tableName, array($this->pk => $id)); 
             return $row;
         } catch (Exception $ex) {
+            log_message('error', $ex->getMessage());
             return false;
         }
     }

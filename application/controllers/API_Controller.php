@@ -31,7 +31,7 @@ class API_Controller extends CI_Controller {
             $this->handleUnhautorized();
             die();
         }
-                
+        
         $this->preLoad($id);
         
         // Effettua caricamento da model
