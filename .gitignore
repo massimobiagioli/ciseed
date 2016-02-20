@@ -26,5 +26,8 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-workspace
 *.sublime-project
 
+#CONFIG
+application/config/config-php
+
 #ASSETS
-assets/
+assets/bower_components
