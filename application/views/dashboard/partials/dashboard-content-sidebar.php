@@ -3,7 +3,7 @@
         <ul class="sidebar-menu">
             <li class="active">
                 <a href="#">
-                    <i class="fa fa-glass"></i> <span>Tabelle</span>
+                    <i class="fa fa-glass"></i> <span>Tabelle</span>                    
                 </a>
             </li>
             <li>

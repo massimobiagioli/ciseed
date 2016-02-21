@@ -17,12 +17,8 @@ class Welcome extends CI_Controller {
     }
     
     private function loadPartials() {
-        $this->load->vars(array(
-            'headerLogo' => 'dashboard/partials/dashboard-content-header-logo.php',
-            'headerNavbar' => 'dashboard/partials/dashboard-content-header-navbar.php',
-            'sidebar' => 'dashboard/partials/dashboard-content-sidebar.php',
-            'main' => 'dashboard/partials/dashboard-content-main.php',
-        ));
+        $this->load->helper('dahsboard_view_getpartial');
+        $this->load->vars(dashboardViewGetPartials());
     }
     
     private function getContentData() {
