@@ -5,6 +5,7 @@ class Soggetto extends API_Controller {
     
     protected function initVars() {
         $this->model = 'soggetto';
-    }
-    
+        $this->gridCaption = 'Soggetti';                        
+    }        
+        
 }

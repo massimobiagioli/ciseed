@@ -7,6 +7,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class API_Controller extends CI_Controller {    
     
     protected $model;
+    protected $gridCaption;
+    protected $gridCols;
     
     public function __construct() {        
         parent::__construct();     
@@ -27,21 +29,39 @@ class API_Controller extends CI_Controller {
      */
     public function index() {
         $this->load->helper('url');
-        $this->load->view('dashboard/dashboard-header');
+        $this->load->view('dashboard/dashboard-header', $this->getHeaderData());
         $this->load->view('dashboard/dashboard-content', $this->getContentData());
         $this->load->view('dashboard/dashboard-footer');
     }
     
     private function loadPartials() {
         $this->load->helper('dahsboard_view_getpartial');
+        
+        // partials generiche
         $this->load->vars(dashboardViewGetPartials());
+        
+        // partials specifiche della welcome page
+        $this->load->vars($this->loadCustomPartials());
     }
     
-    private function getContentData() {
-        $data = array();
-        
-        return $data;
+    protected function loadCustomPartials() {
+        return array(
+            'customHeader' => 'dashboard/partials/dashboard-header-datagrid.php',
+            'customContent' => 'dashboard/partials/dashboard-content-datagrid.php'
+        );
     }
+    
+    protected function getHeaderData() {
+        return array(
+            'model' => $this->model,
+            'gridCaption' => $this->gridCaption,
+            'gridCols' => $this->gridCols
+        );
+    }    
+    
+    protected function getContentData() {
+        return array();
+    }        
     
     /**
      * Caricamento dati model per chiave

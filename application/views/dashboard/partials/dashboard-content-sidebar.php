@@ -2,15 +2,10 @@
     <section class="sidebar">
         <ul class="sidebar-menu">
             <li class="active">
-                <a href="#">
-                    <i class="fa fa-glass"></i> <span>Tabelle</span>                    
+                <a href="<?php echo base_url(); ?><?php echo index_page(); ?>/soggetto">
+                    <i class="fa fa-male"></i> <span>Soggetti</span>                    
                 </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-gavel"></i> <span>Impostazioni</span>
-                </a>
-            </li>
+            </li>            
         </ul>
     </section>
     <!-- /.sidebar -->

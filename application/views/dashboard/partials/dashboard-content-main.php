@@ -1,4 +1,4 @@
 <aside class="right-side">    
-    <section class="content">
-        <span>Gestione contenuto</span>
+    <section class="content">        
+        <?php $this->load->view($customContent); ?>
     </section><!-- /.content -->
