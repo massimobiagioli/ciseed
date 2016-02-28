@@ -1,5 +1,5 @@
                 <div class="footer-main">
-                    by Massimo Biagioli (2016)
+                    powered by <a href="https://www.codeigniter.com/">Codeigniter</a>
                 </div>
             </aside><!-- /.right-side -->
         </div><!-- ./wrapper -->

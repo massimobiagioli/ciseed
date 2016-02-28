@@ -64,6 +64,29 @@ class API_Model extends CI_Model {
             return false;
         }
     }            
+
+    /**
+     * Conteggio record in funzione dei criteri di ricerca/ordinamento in ingresso
+     * @param object $queryData Oggetto QueryData
+     * @return mixed Numero record in caso di esito positivo, altrimenti false
+     */
+    public function countQuery($queryData) {
+        try {            
+            $this->db->select('*')
+                      ->from($this->tableName)
+                      ->where($this->getQueryFilters($queryData->filters));
+            
+            
+            // TODO: completare conteggio record
+            
+            $query = $this->db->get();  
+            
+            return $query->result();
+        } catch (Exception $ex) {
+            log_message('error', $ex->getMessage());
+            return false;
+        }
+    }            
     
     /**
      * Inserimento di un record sul database

@@ -1,31 +1,35 @@
 <script type="text/javascript">
+    var cols = [];
+    <?php foreach ($gridCols as $gridCol): ?>
+        cols.push({
+            field: '<?=$gridCol['field']?>',
+            headerText: '<?=$gridCol['headerText']?>',
+            sortable: <?=$gridCol['sortable']?>,
+        });
+    <?php endforeach; ?>    
     $(function() {
         $('#datagrid').puidatatable({
             lazy: true,
-            caption: '<?php echo $gridCaption; ?>',
+            caption: '<?=$gridCaption?>',
             paginator: {
-                rows: 10,
+                rows: <?=$gridRows?>,
                 totalRecords: 4
             },
-            columns: [
-                {field:'sog_id', headerText: 'ID', sortable:true},
-                {field:'sog_nome', headerText: 'Nome', sortable:true},
-                {field:'sog_indirizzo', headerText: 'Indirizzo', sortable:true}
-            ],
+            columns: cols,
             datasource: function(callback, ui) {
                 var queryData = {
-                    "limit": 10,
-                    "offset": ui.first,
-                    "filters": [],
-                    "sort": [
+                    limit: <?=$gridRows?>,
+                    offset: ui.first,
+                    filters: [],
+                    sort: [
                         {
-                            "field": ui.sortField,
-                            "type": (ui.sortOrder === 1 ? "ASC" : "DESC")
+                            field: ui.sortField,
+                            type: (ui.sortOrder === 1 ? "ASC" : "DESC")
                         }
                     ]
                 };
-                var enc = encodeURIComponent(btoa(JSON.stringify(queryData)));                                
-                var uri = '<?php echo base_url(); ?><?php echo index_page(); ?>/api/<?php echo $model; ?>/' + enc;                
+                var encodedParams = encodeURIComponent(btoa(JSON.stringify(queryData)));                                
+                var uri = '<?php echo base_url(); ?><?php echo index_page(); ?>/api/<?=$model?>/' + encodedParams;                
                 $.ajax({
                     type: "GET",
                     url: uri,

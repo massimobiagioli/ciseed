@@ -9,6 +9,7 @@ class API_Controller extends CI_Controller {
     protected $model;
     protected $gridCaption;
     protected $gridCols;
+    protected $gridRows = 10;
     
     public function __construct() {        
         parent::__construct();     
@@ -55,7 +56,8 @@ class API_Controller extends CI_Controller {
         return array(
             'model' => $this->model,
             'gridCaption' => $this->gridCaption,
-            'gridCols' => $this->gridCols
+            'gridCols' => $this->gridCols,
+            'gridRows' => $this->gridRows
         );
     }    
     
@@ -115,6 +117,36 @@ class API_Controller extends CI_Controller {
         $modelName = $this->model;
         return $this->$modelName->load($id);
     }        
+
+    /**
+     * Effettua conteggio dei record per una query
+     * @param string $filters queryData serializzato in json
+     */
+    public function countQuery($filters) {        
+        // Controllo autorizzazioni
+        if (!$this->checkAuth()) {
+            $this->handleUnhautorized();
+            die();
+        }
+        
+        // Parsing dei parametri in ingresso
+        $queryData = $this->parseQueryFilters($filters);
+        if ($queryData == null) {
+            $this->handleInternalError();
+            die();
+        }
+        
+        // Effettua caricamento da model
+        $this->loadModel();
+        $data = $this->countModelQuery($queryData);
+        if (!$data) {
+            $this->handleInternalError();
+            die();
+        }
+                
+        // Gestione risposta json
+        $this->handleJsonResponse($data);
+    }    
     
     /**
      * Caricamento dati
@@ -176,7 +208,17 @@ class API_Controller extends CI_Controller {
         $modelName = $this->model;
         return $this->$modelName->query($queryData);
     }
-        
+    
+    /**
+     * Conta record per una specifica query
+     * @param int $queryData QueryData
+     * @return Conteggio dei record in caso di esito potitivo, altrimenti false
+     */
+    protected function counthModelQuery($queryData) {
+        $modelName = $this->model;
+        return $this->$modelName->countQuery($queryData);
+    }
+    
     /**
      * Inserimento di un nuovo elemento
      */
