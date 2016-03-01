@@ -6,7 +6,7 @@
             headerText: '<?=$gridCol['headerText']?>',
             sortable: <?=$gridCol['sortable']?>,
         });
-    <?php endforeach; ?>    
+    <?php endforeach; ?>
     $(function() {
         $('#datagrid').puidatatable({
             lazy: true,

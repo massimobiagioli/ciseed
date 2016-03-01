@@ -62,3 +62,4 @@ $route['api/(:any)/(:any)']['GET'] = '$1/query/$2';
 $route['api/(:any)']['POST'] = '$1/insert';
 $route['api/(:any)/(:num)']['PUT'] = '$1/update/$2';
 $route['api/(:any)/(:num)']['DELETE'] = '$1/delete/$2';
+$route['api/(:any)/count/(:any)']['GET'] = '$1/countQuery/$2';

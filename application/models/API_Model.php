@@ -72,16 +72,13 @@ class API_Model extends CI_Model {
      */
     public function countQuery($queryData) {
         try {            
-            $this->db->select('*')
+            $this->db->select("count($this->pk) as RC")
                       ->from($this->tableName)
                       ->where($this->getQueryFilters($queryData->filters));
-            
-            
-            // TODO: completare conteggio record
-            
+                                    
             $query = $this->db->get();  
             
-            return $query->result();
+            return $query->row();
         } catch (Exception $ex) {
             log_message('error', $ex->getMessage());
             return false;

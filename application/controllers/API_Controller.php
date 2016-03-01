@@ -214,7 +214,7 @@ class API_Controller extends CI_Controller {
      * @param int $queryData QueryData
      * @return Conteggio dei record in caso di esito potitivo, altrimenti false
      */
-    protected function counthModelQuery($queryData) {
+    protected function countModelQuery($queryData) {
         $modelName = $this->model;
         return $this->$modelName->countQuery($queryData);
     }
