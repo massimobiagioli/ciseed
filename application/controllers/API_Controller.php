@@ -41,17 +41,28 @@ class API_Controller extends CI_Controller {
         // partials generiche
         $this->load->vars(dashboardViewGetPartials());
         
-        // partials specifiche della welcome page
-        $this->load->vars($this->loadCustomPartials());
+        // partials specifiche (base)
+        $this->load->vars($this->loadCustomPartialsBase());
+    
+        // partials specifiche (specifiche)
+        $this->load->vars($this->loadCustomPartialsModel());
     }
     
-    protected function loadCustomPartials() {
+    private function loadCustomPartialsBase() {
         return array(
             'customHeader' => 'dashboard/partials/dashboard-header-datagrid.php',
             'customContent' => 'dashboard/partials/dashboard-content-datagrid.php'
-        );
+        );        
     }
     
+    /**
+     * Carica viste parziali specifiche per il modello
+     * @return array Array viste parziali
+     */
+    protected function loadCustomPartialsModel() {
+        return array();
+    }    
+
     protected function getHeaderData() {
         return array(
             'model' => $this->model,

@@ -24,5 +24,11 @@ class Soggetto extends API_Controller {
             )
         );        
     }        
-        
+    
+    protected function loadCustomPartialsModel() {
+        return array(
+            'customSearch' => 'dashboard/partials/dashboard-content-search-soggetto.php'
+        );
+    }
+
 }

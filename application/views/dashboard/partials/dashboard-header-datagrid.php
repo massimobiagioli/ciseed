@@ -41,5 +41,9 @@
                 });
             }
         });
+        
+        $('#tabView').puitabview();
+        
+        
     });
 </script>
