@@ -1,4 +1,4 @@
-<div id="tabView">
+<div id="tabview">
     <ul>
         <li><a href="#tabSearch">Ricerca</a></li>
         <li><a href="#tabResults">Risultati</a></li>

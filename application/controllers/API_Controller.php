@@ -182,7 +182,7 @@ class API_Controller extends CI_Controller {
         // Effettua caricamento da model
         $this->loadModel();
         $data = $this->fetchModelQuery($queryData);
-        if (!$data) {
+        if ($data === false) {
             $this->handleInternalError();
             die();
         }

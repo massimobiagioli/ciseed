@@ -8,19 +8,20 @@
         });
     <?php endforeach; ?>
     $(function() {
-        $('#datagrid').puidatatable({
+        $('#datagrid').puidatatable({            
             lazy: true,
             caption: '<?=$gridCaption?>',
             paginator: {
                 rows: <?=$gridRows?>,
-                totalRecords: 4
+                totalRecords: 0
             },
             columns: cols,
-            datasource: function(callback, ui) {
+            datasource: function(callback, ui) {                
+                <?php $this->load->view($datagridCustomFilters); ?>
                 var queryData = {
                     limit: <?=$gridRows?>,
                     offset: ui.first,
-                    filters: [],
+                    filters: getFilters(),
                     sort: [
                         {
                             field: ui.sortField,
@@ -29,21 +30,38 @@
                     ]
                 };
                 var encodedParams = encodeURIComponent(btoa(JSON.stringify(queryData)));                                
-                var uri = '<?php echo base_url(); ?><?php echo index_page(); ?>/api/<?=$model?>/' + encodedParams;                
+                                
+                // Effettua la count
+                var uriCount = '<?php echo base_url(); ?><?php echo index_page(); ?>/api/<?=$model?>/count/' + encodedParams,               
+                    uri = '<?php echo base_url(); ?><?php echo index_page(); ?>/api/<?=$model?>/' + encodedParams,
+                    count = 0,
+                    that = this;
+                
                 $.ajax({
                     type: "GET",
-                    url: uri,
+                    url: uriCount,
                     dataType: "json",                
-                    context: this,
                     success: function(response) {
-                        callback.call(this, response);
+                        count = parseInt(response.RC);
+
+                        // Carica i dati
+                        $.ajax({
+                            type: "GET",
+                            url: uri,
+                            dataType: "json",                
+                            context: that,
+                            success: function(response) {
+                                callback.call(that, response);                        
+                                $('#datagrid').puidatatable('setTotalRecords', count);
+                            }
+                        });
                     }
-                });
+                });                
             }
         });
         
-        $('#tabView').puitabview();
+        $('#tabview').puitabview();
         
-        
+        <?php $this->load->view($customHeaderSearch); ?>
     });
 </script>

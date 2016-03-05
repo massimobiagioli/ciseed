@@ -27,7 +27,9 @@ class Soggetto extends API_Controller {
     
     protected function loadCustomPartialsModel() {
         return array(
-            'customSearch' => 'dashboard/partials/dashboard-content-search-soggetto.php'
+            'customSearch' => 'dashboard/partials/dashboard-content-search-soggetto.php',
+            'customHeaderSearch' => 'dashboard/partials/dashboard-header-search-soggetto.php',
+            'datagridCustomFilters' => 'dashboard/partials/dashboard-header-datagrid-filters-soggetto.php'
         );
     }
 
