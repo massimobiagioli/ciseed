@@ -8,7 +8,7 @@
         });
     <?php endforeach; ?>
     $(function() {
-        $('#tabview').puitabview();        
+        $('#tabview').puitabview();                
         
         $('#datagrid').puidatatable({            
             lazy: true,
@@ -65,4 +65,9 @@
         
         <?php $this->load->view($customHeaderSearch); ?>
     });
+    
+    function loadDataGrid() {
+        // TODO
+    }
+    
 </script>
