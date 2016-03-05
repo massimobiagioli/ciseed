@@ -12,3 +12,15 @@ if (!function_exists('dashboardViewGetPartials')) {
         );
     }   
 }
+
+if (!function_exists('dashboardViewGetPartialsBase')) {
+    function dashboardViewGetPartialsBase($options) {
+        return array(
+            'customHeader' => 'dashboard/partials/dashboard-header-' . $options['viewRenderType'] . '.php',
+            'customContent' => 'dashboard/partials/dashboard-content-' . $options['viewRenderType'] . '.php',
+            'customSearch' => 'dashboard/partials/' . $options['model'] . '/content-search.php',
+            'customHeaderSearch' => 'dashboard/partials/' . $options['model'] . '/header-search.php',
+            'datagridCustomFilters' => 'dashboard/partials/' . $options['model'] . '/' . $options['viewRenderType'] . '-filters.php'
+        );     
+    }   
+}

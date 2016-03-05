@@ -6,10 +6,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class API_Controller extends CI_Controller {    
     
+    const VIEW_RENDER_TYPE_DATAGRID = 'datagrid';
+    
     protected $model;
     protected $gridCaption;
     protected $gridCols;
     protected $gridRows = 10;
+    protected $viewRenderType = self::VIEW_RENDER_TYPE_DATAGRID;
     
     public function __construct() {        
         parent::__construct();     
@@ -41,28 +44,23 @@ class API_Controller extends CI_Controller {
         // partials generiche
         $this->load->vars(dashboardViewGetPartials());
         
-        // partials specifiche (base)
-        $this->load->vars($this->loadCustomPartialsBase());
-    
-        // partials specifiche (specifiche)
-        $this->load->vars($this->loadCustomPartialsModel());
+        // partials specifiche (base)        
+        $this->loadPartialsBase();
+        
+        // partials specifiche (model)
+        $this->loadPartialsModel();
     }
     
-    private function loadCustomPartialsBase() {
-        return array(
-            'customHeader' => 'dashboard/partials/dashboard-header-datagrid.php',
-            'customContent' => 'dashboard/partials/dashboard-content-datagrid.php'
-        );        
+    protected function loadPartialsBase() {
+        $this->load->vars(dashboardViewGetPartialsBase(array(
+            'model' => $this->model,
+            'viewRenderType' => $this->viewRenderType
+        )));        
     }
     
-    /**
-     * Carica viste parziali specifiche per il modello
-     * @return array Array viste parziali
-     */
-    protected function loadCustomPartialsModel() {
-        return array();
-    }    
-
+    protected function loadPartialsModel() {        
+    }
+    
     protected function getHeaderData() {
         return array(
             'model' => $this->model,
