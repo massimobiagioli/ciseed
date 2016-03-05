@@ -8,9 +8,12 @@
         });
     <?php endforeach; ?>
     $(function() {
+        $('#tabview').puitabview();        
+        
         $('#datagrid').puidatatable({            
             lazy: true,
             caption: '<?=$gridCaption?>',
+            selectionMode: 'single',
             paginator: {
                 rows: <?=$gridRows?>,
                 totalRecords: 0
@@ -29,14 +32,13 @@
                         }
                     ]
                 };
-                var encodedParams = encodeURIComponent(btoa(JSON.stringify(queryData)));                                
-                                
-                // Effettua la count
-                var uriCount = '<?php echo base_url(); ?><?php echo index_page(); ?>/api/<?=$model?>/count/' + encodedParams,               
+                var encodedParams = encodeURIComponent(btoa(JSON.stringify(queryData))),                                                                                
+                    uriCount = '<?php echo base_url(); ?><?php echo index_page(); ?>/api/<?=$model?>/count/' + encodedParams,               
                     uri = '<?php echo base_url(); ?><?php echo index_page(); ?>/api/<?=$model?>/' + encodedParams,
                     count = 0,
                     that = this;
                 
+                // Effettua la count
                 $.ajax({
                     type: "GET",
                     url: uriCount,
@@ -53,14 +55,13 @@
                             success: function(response) {
                                 callback.call(that, response);                        
                                 $('#datagrid').puidatatable('setTotalRecords', count);
+                                $('#tabview').puitabview('select', 1);
                             }
                         });
                     }
                 });                
             }
-        });
-        
-        $('#tabview').puitabview();
+        });                
         
         <?php $this->load->view($customHeaderSearch); ?>
     });
