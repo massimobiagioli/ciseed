@@ -27,6 +27,9 @@
                 totalRecords: 0
             },
             columns: cols,
+            rowSelect: function(event, data) {
+                // TODO: gestire il record selezionato
+            },
             datasource: function(callback, ui) {                                               
                 <?php $this->load->view($datagridCustomFilters); ?>
                 var queryData = {
