@@ -79,7 +79,7 @@
                 // Se sono cambiati i filtri, effettua una nuova count
                 // prima di effettuare il caricamento
                 if (App.data.newFilters) {
-                    countRecords(loadData());
+                    countRecords(loadData);
                 } else {
                     loadData();
                 }
