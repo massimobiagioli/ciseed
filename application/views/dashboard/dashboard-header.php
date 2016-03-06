@@ -23,6 +23,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <script src="<?php echo base_url(); ?>assets/bower_components/primeui/primeui-min.js"></script>
         <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>       
         
+        <!-- App -->
+        <script src="<?php echo base_url(); ?>assets/app/js/app.js"></script>       
+        
         <!-- Custom -->
         <?php $this->load->view($customHeader); ?>        
     </head>
