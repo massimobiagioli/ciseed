@@ -28,7 +28,8 @@
             },
             columns: cols,
             rowSelect: function(event, data) {
-                // TODO: gestire il record selezionato
+                window.location = '<?php echo base_url(); ?><?php echo index_page(); ?>/<?=$model?>/detail/' + data.<?=$pk?>;                
+                App.data.selectRow(data.<?=$pk?>, true);
             },
             datasource: function(callback, ui) {                                               
                 <?php $this->load->view($datagridCustomFilters); ?>
@@ -77,7 +78,7 @@
                             loadFunction();
                         }
                     });                
-                }
+                };
                 
                 // Se sono cambiati i filtri, effettua una nuova count
                 // prima di effettuare il caricamento
@@ -88,6 +89,5 @@
                 }
             }
         });                
-    }
-    
+    }    
 </script>

@@ -148,5 +148,21 @@ class API_Model extends CI_Model {
     private function updateDataWithID($data, $id) {
         return (object)array_merge((array)$data, array($this->pk => $id));
     }
-        
+    
+    public function getTableName() {
+        return $this->tableName;
+    }
+
+    public function getPk() {
+        return $this->pk;
+    }
+
+    public function setTableName($tableName) {
+        $this->tableName = $tableName;
+    }
+
+    public function setPk($pk) {
+        $this->pk = $pk;
+    }
+    
 }

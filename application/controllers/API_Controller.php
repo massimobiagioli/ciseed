@@ -16,8 +16,7 @@ class API_Controller extends CI_Controller {
     
     public function __construct() {        
         parent::__construct();     
-        $this->initVars();
-        $this->loadPartials();
+        $this->initVars();        
         $this->authenticateCORS();
     }
     
@@ -29,16 +28,17 @@ class API_Controller extends CI_Controller {
     }
     
     /**
-     * Render interfaccia
+     * Render paginazione
      */
     public function index() {
+        $this->loadPartialsIndex();
         $this->load->helper('url');
         $this->load->view('dashboard/dashboard-header', $this->getHeaderData());
         $this->load->view('dashboard/dashboard-content', $this->getContentData());
         $this->load->view('dashboard/dashboard-footer');
     }
     
-    private function loadPartials() {
+    private function loadPartialsIndex() {
         $this->load->helper('dahsboard_view_getpartial');
         
         // partials generiche
@@ -61,9 +61,46 @@ class API_Controller extends CI_Controller {
     protected function loadPartialsModel() {        
     }
     
+    /**
+     * Render dettaglio
+     */
+    public function detail($id) {        
+        $this->loadPartialsDetail();
+        $this->load->helper('url');
+        $this->load->view('dashboard/dashboard-header', $this->getHeaderDataDetail($id));
+        $this->load->view('dashboard/dashboard-content', $this->getContentDataDetail($id));
+        $this->load->view('dashboard/dashboard-footer');        
+    }
+
+    private function loadPartialsDetail() {
+        $this->load->helper('dahsboard_view_getpartial');
+        
+        // partials generiche
+        $this->load->vars(dashboardViewGetPartials());
+        
+        // partials specifiche (base)        
+        $this->loadPartialsBaseDetail();
+        
+        // partials specifiche (model)
+        $this->loadPartialsModelDetail();        
+    }
+        
+    protected function loadPartialsBaseDetail() {
+        $this->load->vars(dashboardViewGetPartialsBaseDetail(array(
+            'model' => $this->model
+        )));
+    }
+    
+    protected function loadPartialsModelDetail() {        
+    }
+        
     protected function getHeaderData() {
+        $this->loadModel();
+        $modelName = $this->model;        
+        
         return array(
             'model' => $this->model,
+            'pk' => $this->$modelName->getPk(),
             'gridCaption' => $this->gridCaption,
             'gridCols' => $this->gridCols,
             'gridRows' => $this->gridRows
@@ -73,6 +110,22 @@ class API_Controller extends CI_Controller {
     protected function getContentData() {
         return array();
     }        
+    
+    protected function getHeaderDataDetail() {
+        return array(
+            'action' => 'edit'
+        );
+    }    
+    
+    protected function getContentDataDetail($id) {
+        $this->loadModel();
+        $row = $this->fetchModelRecord($id);
+        
+        return array(
+            'row' => (array)$row,
+            'action' => 'edit'
+        );
+    }
     
     /**
      * Caricamento dati model per chiave

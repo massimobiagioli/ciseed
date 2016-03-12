@@ -7,6 +7,10 @@
                 </a>
             </li>            
         </ul>
+        
+        <!-- Custom Actions -->
+        <?php $this->load->view($sidebarMenuActions); ?>
+        
     </section>
     <!-- /.sidebar -->
 </aside>
