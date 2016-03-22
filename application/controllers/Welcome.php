@@ -25,7 +25,8 @@ class Welcome extends CI_Controller {
         // partials specifiche della welcome page
         $this->load->vars(array(
             'customHeader' => 'dashboard/partials/dashboard-header-welcome.php',
-            'customContent' => 'dashboard/partials/dashboard-content-welcome.php'              
+            'customContent' => 'dashboard/partials/dashboard-content-welcome.php',
+            'sidebarMenuActions' => 'dashboard/partials/dashboard-content-sidebar-actions.php'
         ));
     }
 

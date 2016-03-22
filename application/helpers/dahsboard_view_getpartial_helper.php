@@ -42,6 +42,7 @@ if (!function_exists('dashboardViewGetPartialsBaseDetail')) {
             'customContent' => 'dashboard/partials/dashboard-content-detail.php',
             'customDetail' => 'dashboard/partials/' . $options['model'] . '/detail.php',
             'customHeaderDetail' => 'dashboard/partials/' . $options['model'] . '/header-detail.php',
+            'sidebarMenuActions' => 'dashboard/partials/dashboard-content-sidebar-actions.php'
         );     
     }   
 }

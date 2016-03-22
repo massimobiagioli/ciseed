@@ -8,13 +8,18 @@
         });
     <?php endforeach; ?>
     $(function() {
-        loadTabview();        
+        loadTabview();
+        loadMenu();
         <?php $this->load->view($customHeaderSearch); ?>
     });
     
     function loadTabview() {
         App.data.initDatagrid = false;
         $('#tabview').puitabview();                
+    }
+    
+    function loadMenu() {
+        $('#menuActions').puimenu();
     }
     
     function loadDataGrid() {
